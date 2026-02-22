@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+llama-cpp-python
+supabase
+python-multipart
+pytesseract
+pillow
+python-dotenv
+aiohttp
