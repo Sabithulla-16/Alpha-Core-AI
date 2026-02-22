@@ -29,6 +29,20 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/")
+async def root():
+    return {
+        "name": "Alpha Core AI API",
+        "version": "1.0.0",
+        "status": "online",
+        "endpoints": {
+            "health": "/health",
+            "chat": "/chat",
+            "upload": "/upload-image",
+            "cleanup": "/cleanup"
+        }
+    }
+
 @app.get("/health")
 async def health_check():
     return {"status": "healthy", "version": "1.0.0"}
