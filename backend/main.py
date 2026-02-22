@@ -5,12 +5,22 @@ from pydantic import BaseModel
 import uvicorn
 import os
 import json
+import sys
 from dotenv import load_dotenv
 from typing import Optional, List
+import logging
 
 from model_manager import model_manager
 from ocr_engine import ocr_engine
 from database import db_manager
+
+# Setup logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    stream=sys.stdout
+)
+logger = logging.getLogger(__name__)
 
 load_dotenv()
 
@@ -60,27 +70,36 @@ class ChatRequest(BaseModel):
 @app.post("/chat")
 async def chat_endpoint(request: ChatRequest):
     try:
+        logger.info(f"Chat request: model={request.model}, user={request.user_id}")
+        
         def stream_response():
             full_response = ""
-            # Pass context and settings to model manager for memory
-            params = {
-                "temperature": request.temperature,
-                "top_p": request.top_p,
-                "max_tokens": request.max_tokens,
-                "repeat_penalty": request.repeat_penalty
-            }
-            for token in model_manager.generate_stream(request.model, request.message, request.context, **params):
-                full_response += token
-                yield f"data: {json.dumps({'token': token})}\n\n"
-            
-            # Final output and DB storage
-            db_manager.store_message(request.user_id, request.message, "user", request.model)
-            db_manager.store_message(request.user_id, full_response, "assistant", request.model)
-            
-            yield "data: [DONE]\n\n"
+            try:
+                # Pass context and settings to model manager for memory
+                params = {
+                    "temperature": request.temperature,
+                    "top_p": request.top_p,
+                    "max_tokens": request.max_tokens,
+                    "repeat_penalty": request.repeat_penalty
+                }
+                for token in model_manager.generate_stream(request.model, request.message, request.context, **params):
+                    full_response += token
+                    yield f"data: {json.dumps({'token': token})}\n\n"
+                
+                logger.info(f"Response generated: {len(full_response)} tokens")
+                
+                # Final output and DB storage
+                db_manager.store_message(request.user_id, request.message, "user", request.model)
+                db_manager.store_message(request.user_id, full_response, "assistant", request.model)
+                
+                yield "data: [DONE]\n\n"
+            except Exception as e:
+                logger.error(f"Stream error: {str(e)}", exc_info=True)
+                yield f"data: {json.dumps({'error': str(e)})}\n\n"
 
         return StreamingResponse(stream_response(), media_type="text/event-stream")
     except Exception as e:
+        logger.error(f"Chat endpoint error: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/upload-image")
