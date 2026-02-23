@@ -43,9 +43,6 @@ body {
 .gradient-accent {
   background: linear-gradient(135deg, var(--accent-secondary) 0%, var(--accent-tertiary) 100%);
 }
-    #020617;
-  background-attachment: fixed;
-}
 
 @media (max-width: 768px) {
   .bg-mesh {
