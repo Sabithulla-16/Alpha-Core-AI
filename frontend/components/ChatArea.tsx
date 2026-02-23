@@ -4,53 +4,44 @@ import React, { useRef, useEffect } from 'react';
 import MessageBubble from './MessageBubble';
 
 interface Message {
-    role: 'user' | 'assistant';
-    content: string;
-    model?: string;
-    isThinking?: boolean;
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  model?: string;
+  timestamp: number;
 }
 
 interface ChatAreaProps {
-    messages: Message[];
-    isTyping: boolean;
+  messages: Message[];
+  isLoading: boolean;
 }
 
-export default function ChatArea({ messages, isTyping }: ChatAreaProps) {
-    const scrollRef = useRef<HTMLDivElement>(null);
+export default function ChatArea({ messages, isLoading }: ChatAreaProps) {
+  const scrollRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-        if (scrollRef.current) {
-            scrollRef.current.scrollTo({
-                top: scrollRef.current.scrollHeight,
-                behavior: 'smooth'
-            });
-        }
-    }, [messages, isTyping]);
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages]);
 
-    return (
-        <div ref={scrollRef} className="flex-1 overflow-y-auto chat-container relative z-10 scroll-smooth">
-            {messages.length === 0 ? (
-                <div className="h-full flex flex-col items-center justify-center text-gray-500 space-y-4 sm:space-y-6 px-4">
-                    <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-[#161b22] border border-[#30363d] flex items-center justify-center shadow-2xl animate-pulse-glow">
-                        <span className="text-2xl sm:text-3xl animate-bounce">✨</span>
-                    </div>
-                    <div className="text-center px-4">
-                        <h1 className="text-xl sm:text-2xl font-bold text-foreground mb-2 gradient-text">Next-Gen Intelligence</h1>
-                        <p className="text-xs sm:text-sm text-gray-400 max-w-sm">
-                            Experience lightning-fast reasoning and high-accuracy coding. Select a model to begin.
-                        </p>
-                    </div>
-                </div>
-            ) : (
-                <div className="flex flex-col">
-                    {messages.map((msg, i) => (
-                        <MessageBubble key={i} {...msg} />
-                    ))}
-                </div>
-            )}
-
-            {/* Large Scroll anchor for floating input area */}
-            <div className="h-32 sm:h-40 md:h-48 w-full shrink-0" />
+  return (
+    <div
+      ref={scrollRef}
+      className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 md:space-y-6 scroll-smooth"
+    >
+      {messages.map(msg => (
+        <MessageBubble key={msg.id} {...msg} />
+      ))}
+      {isLoading && (
+        <div className="flex gap-2 items-end mb-4">
+          <div className="w-8 h-8 bg-accent-primary/10 rounded-lg flex items-center justify-center border border-accent-primary/20">
+            <div className="w-2 h-2 bg-accent-primary rounded-full animate-pulse" />
+          </div>
+          <div className="text-sm text-text-tertiary italic">Thinking...</div>
         </div>
-    );
+      )}
+      <div className="h-20" />
+    </div>
+  );
 }
