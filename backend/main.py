@@ -13,6 +13,7 @@ import logging
 from model_manager import model_manager
 from ocr_engine import ocr_engine
 from database import db_manager
+from image_generator import image_generator
 
 # Setup logging
 logging.basicConfig(
@@ -120,6 +121,37 @@ async def cleanup_chats():
         db_manager.cleanup_old_messages()
         return {"message": "Cleanup successful"}
     except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+class ImageGenerationRequest(BaseModel):
+    prompt: str
+    width: Optional[int] = 512
+    height: Optional[int] = 512
+    steps: Optional[int] = 20
+
+@app.post("/generate-image")
+async def generate_image(request: ImageGenerationRequest):
+    """Generate an image from text prompt"""
+    try:
+        logger.info(f"Image generation request: {request.prompt}")
+        result = image_generator.generate(
+            prompt=request.prompt,
+            width=request.width,
+            height=request.height,
+            steps=request.steps
+        )
+        return result
+    except Exception as e:
+        logger.error(f"Image generation error: {str(e)}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/image-status")
+async def image_generation_status():
+    """Get current image generation backend status"""
+    try:
+        return image_generator.get_status()
+    except Exception as e:
+        logger.error(f"Status check error: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
