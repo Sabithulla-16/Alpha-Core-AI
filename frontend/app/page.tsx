@@ -14,35 +14,67 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 const MODELS = [
   {
     id: 'fast-chat', 
-    name: 'Alpha Flash',
+    name: 'Qwen 0.5B',
     category: 'Speed',
-    description: 'Lightning-fast responses for quick queries',
+    description: 'Ultra-lightweight, blazing-fast responses',
     icon: <Zap size={18} />,
-    prompts: ["Summarize this concept", "Quick advice needed", "Brief explanation"]
+    prompts: ["Quick summary", "Fast answer", "Brief explanation"]
+  },
+  {
+    id: 'tinyllama', 
+    name: 'TinyLlama 1.1B',
+    category: 'Speed',
+    description: 'Small but capable language model',
+    icon: <Zap size={18} />,
+    prompts: ["Simple response", "Quick chat", "Basic question"]
   },
   {
     id: 'coder', 
-    name: 'Code Master',
+    name: 'Qwen Coder 1.5B',
     category: 'Programming',
-    description: 'Expert coding and algorithms',
+    description: 'Code generation and debugging',
     icon: <Code size={18} />,
-    prompts: ["Debug this code", "Explain algorithm", "Optimize performance"]
+    prompts: ["Debug this code", "Write a function", "Optimize code"]
   },
   {
-    id: 'phi', 
-    name: 'Logic Engine',
-    category: 'Reasoning',
-    description: 'Advanced logical analysis',
+    id: 'phi-3.5', 
+    name: 'Phi 3.5 Mini',
+    category: 'Programming',
+    description: 'Microsoft lightweight but intelligent model',
+    icon: <Code size={18} />,
+    prompts: ["Write Python code", "Explain algorithm", "Code review"]
+  },
+  {
+    id: 'mistral', 
+    name: 'Mistral 7B',
+    category: 'Intelligence',
+    description: 'Powerful reasoning and instruction-following',
     icon: <Brain size={18} />,
-    prompts: ["Analyze this problem", "Step-by-step reasoning", "Complex Logic"]
+    prompts: ["Deep analysis", "Complex reasoning", "Detailed explanation"]
   },
   {
-    id: 'orca', 
-    name: 'Creative Mind',
-    category: 'Creative',
-    description: 'Creative writing and reasoning',
-    icon: <Sparkles size={18} />,
-    prompts: ["Write a story", "Creative ideas", "Brainstorm concepts"]
+    id: 'neural-chat', 
+    name: 'Neural Chat 7B',
+    category: 'Intelligence',
+    description: 'Optimized for coherent conversation',
+    icon: <Brain size={18} />,
+    prompts: ["Have a conversation", "Explain concept", "Technical discussion"]
+  },
+  {
+    id: 'llama-2', 
+    name: 'Llama 2 7B',
+    category: 'Intelligence',
+    description: 'Meta\'s versatile large language model',
+    icon: <Brain size={18} />,
+    prompts: ["General knowledge", "Creative writing", "Problem solving"]
+  },
+  {
+    id: 'zephyr', 
+    name: 'Zephyr 7B',
+    category: 'Intelligence',
+    description: 'High-quality instruction-following model',
+    icon: <Brain size={18} />,
+    prompts: ["Follow instructions", "Complex tasks", "Reasoning"]
   }
 ];
 
