@@ -97,9 +97,17 @@ class ToolExecutor:
     def get_weather(self, city: str, units: str = "metric") -> Dict[str, Any]:
         """Get current weather using Open-Meteo (no API key needed)"""
         try:
+            # Clean city name - remove common phrases
+            clean_city = city.replace("right now", "").replace("currently", "").replace("now", "").strip()
+            # Extract just the city name (usually first word or two)
+            clean_city = " ".join(clean_city.split()[:2])
+            
+            if not clean_city or len(clean_city) < 2:
+                clean_city = "London"  # Default fallback
+            
             # First get coordinates from city name
             geo_params = {
-                'name': city,
+                'name': clean_city,
                 'count': 1,
                 'language': 'en',
                 'format': 'json'
@@ -113,7 +121,7 @@ class ToolExecutor:
             geo_data = geo_response.json()
             
             if not geo_data.get('results'):
-                raise Exception(f"City '{city}' not found")
+                raise Exception(f"City '{clean_city}' not found")
             
             location = geo_data['results'][0]
             latitude = location['latitude']
@@ -307,19 +315,21 @@ class ToolExecutor:
     def get_time(self, timezone: str = "UTC") -> Dict[str, Any]:
         """Get current time in timezone"""
         try:
-            from datetime import timezone as tz_module
+            from datetime import timedelta, timezone as tz
             
             # Simple timezone support
             timezones = {
-                "UTC": tz_module.utc,
-                "EST": tz_module(tz_module.timedelta(hours=-5)),
-                "PST": tz_module(tz_module.timedelta(hours=-8)),
-                "CET": tz_module(tz_module.timedelta(hours=1)),
-                "IST": tz_module(tz_module.timedelta(hours=5, minutes=30)),
+                "UTC": tz.utc,
+                "EST": tz(timedelta(hours=-5)),
+                "PST": tz(timedelta(hours=-8)),
+                "CET": tz(timedelta(hours=1)),
+                "IST": tz(timedelta(hours=5, minutes=30)),
+                "JST": tz(timedelta(hours=9)),  # Japan
+                "AEST": tz(timedelta(hours=10)),  # Australia
             }
             
-            tz = timezones.get(timezone.upper(), tz_module.utc)
-            current_time = datetime.now(tz)
+            tz_offset = timezones.get(timezone.upper(), tz.utc)
+            current_time = datetime.now(tz_offset)
             
             return {
                 "timezone": timezone.upper(),

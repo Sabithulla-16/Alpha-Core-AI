@@ -83,15 +83,15 @@ async def chat_endpoint(request: ChatRequest):
             try:
                 # Detect if tools should be used based on message content
                 tool_keywords = {
-                    "web_search": ["search", "look up", "find", "google", "what is", "who is", "latest"],
-                    "weather": ["weather", "temperature", "forecast", "rain", "sunny", "climate"],
-                    "news": ["news", "headlines", "today", "current events"],
-                    "stock_price": ["stock", "price", "$", "market", "trading"],
-                    "crypto_price": ["bitcoin", "ethereum", "crypto", "digital", "btc", "eth"],
-                    "time": ["time", "what time", "current time", "timezone"],
-                    "calculator": ["calculate", "math", "solve", "equation", "plus", "minus", "multiply"],
-                    "currency_convert": ["convert", "exchange", "currency", "dollar", "euro"],
-                    "wikipedia": ["wiki", "wikipedia", "learn about", "tell me about"]
+                    "web_search": ["search", "look up", "find", "google", "what is", "who is", "latest", "how"],
+                    "weather": ["weather", "temperature", "forecast", "rain", "sunny", "climate", "cloudy", "hot", "cold", "degree"],
+                    "news": ["news", "headlines", "today", "current events", "breaking", "updates"],
+                    "stock_price": ["stock", "price", "$", "market", "trading", "share"],
+                    "crypto_price": ["bitcoin", "ethereum", "crypto", "digital", "btc", "eth", "coin", "price"],
+                    "time": ["time", "what time", "current time", "timezone", "tokyo", "london", "newyork", "paris", "sydney", "moscow"],
+                    "calculator": ["calculate", "math", "solve", "equation", "plus", "minus", "multiply", "divide", "number"],
+                    "currency_convert": ["convert", "exchange", "currency", "dollar", "euro", "pound", "yen"],
+                    "wikipedia": ["wiki", "wikipedia", "learn about", "tell me about", "definition"]
                 }
                 
                 message_lower = request.message.lower()
@@ -126,7 +126,14 @@ async def chat_endpoint(request: ChatRequest):
                                 else:
                                     result = tool_executor.execute_tool(tool, crypto="bitcoin")
                             elif tool == "time":
-                                result = tool_executor.execute_tool(tool)
+                                # Extract timezone name if available
+                                timezone = "UTC"
+                                for tz in ["tokyo", "tokyo time", "jst", "est", "pst", "cet"]:
+                                    if tz in message_lower:
+                                        tz_map = {"tokyo": "JST", "tokyo time": "JST", "jst": "JST", "est": "EST", "pst": "PST", "cet": "CET"}
+                                        timezone = tz_map.get(tz, "UTC")
+                                        break
+                                result = tool_executor.execute_tool(tool, timezone=timezone)
                             elif tool == "calculator":
                                 # Extract expression (simple)
                                 result = tool_executor.execute_tool(tool, expression=request.message)
