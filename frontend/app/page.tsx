@@ -224,6 +224,7 @@ export default function Home() {
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
       let content = '';
+      let toolsUsed: string[] = [];
 
       let done = false;
       while (!done) {
@@ -240,6 +241,20 @@ export default function Home() {
               if (data === '[DONE]') break;
               try {
                 const parsed = JSON.parse(data);
+                
+                // Handle tools_used message
+                if (parsed.tools_used) {
+                  toolsUsed = parsed.tools_used;
+                  const toolsNotification = `🔧 Using tools: ${toolsUsed.join(', ').replaceAll('_', ' ')}`;
+                  content = toolsNotification + '\n\n' + content;
+                  setMessages(prev => {
+                    const updated = [...prev];
+                    updated[updated.length - 1] = { ...updated[updated.length - 1], content };
+                    return updated;
+                  });
+                }
+                
+                // Handle token message
                 if (parsed.token) {
                   content += parsed.token;
                   setMessages(prev => {
