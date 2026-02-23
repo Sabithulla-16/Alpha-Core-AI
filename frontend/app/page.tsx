@@ -34,6 +34,36 @@ const MODELS = [
     icon: <Bot size={16} />,
     prompts: ["Write a short sci-fi story about Mars", "Historical impact of the printing press", "Plan a 3-day trip to Tokyo"]
   },
+  {
+    id: 'mistral', name: 'Mistral Pro', description: 'Fast 7B model with instruction following',
+    icon: <Sparkles size={16} />,
+    prompts: ["Write Python code for sorting algorithm", "Explain quantum computing basics", "Compare Python vs JavaScript"]
+  },
+  {
+    id: 'neural', name: 'Neural Chat', description: 'Conversational & context-aware responses',
+    icon: <BrainCircuit size={16} />,
+    prompts: ["Tell me about yourself", "What can you help me with?", "Explain deep learning"]
+  },
+  {
+    id: 'zephyr', name: 'Zephyr 7B', description: 'Instruction tuned for accuracy',
+    icon: <Cpu size={16} />,
+    prompts: ["Debug this: console.log is undefined", "What is machine learning?", "Explain APIs"]
+  },
+  {
+    id: 'openhermes', name: 'OpenHermes 2.5', description: 'Reasoning & instruction following',
+    icon: <Bot size={16} />,
+    prompts: ["Create a marketing plan", "Explain blockchain", "Write a business proposal outline"]
+  },
+  {
+    id: 'starling', name: 'Starling LM', description: 'Optimized for reasoning tasks',
+    icon: <Sparkles size={16} />,
+    prompts: ["Solve: If A=B and B=C, then A=C", "Explain the scientific method", "Plan project timeline"]
+  },
+  {
+    id: 'dolphin', name: 'Dolphin Mixtral', description: 'Multimodal reasoning powerhouse',
+    icon: <Binary size={16} />,
+    prompts: ["Complex problem-solving task", "Advanced reasoning needed", "Multi-step analysis"]
+  },
 ];
 
 interface ChatSession {

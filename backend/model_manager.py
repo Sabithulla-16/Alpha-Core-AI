@@ -37,6 +37,42 @@ class ModelManager:
                 "file": "qwen2.5-0.5b-instruct-q4_k_m.gguf",
                 "url": "https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct-GGUF/resolve/main/qwen2.5-0.5b-instruct-q4_k_m.gguf",
                 "format": "chatml"
+            },
+            "mistral": {
+                "repo": "TheBloke/Mistral-7B-Instruct-v0.2-GGUF",
+                "file": "mistral-7b-instruct-v0.2.Q4_K_M.gguf",
+                "url": "https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf",
+                "format": "chatml"
+            },
+            "neural": {
+                "repo": "TheBloke/neural-chat-7B-v3-1-GGUF",
+                "file": "neural-chat-7b-v3-1.Q4_K_M.gguf",
+                "url": "https://huggingface.co/TheBloke/neural-chat-7B-v3-1-GGUF/resolve/main/neural-chat-7b-v3-1.Q4_K_M.gguf",
+                "format": "chatml"
+            },
+            "zephyr": {
+                "repo": "TheBloke/zephyr-7B-beta-GGUF",
+                "file": "zephyr-7b-beta.Q4_K_M.gguf",
+                "url": "https://huggingface.co/TheBloke/zephyr-7B-beta-GGUF/resolve/main/zephyr-7b-beta.Q4_K_M.gguf",
+                "format": "chatml"
+            },
+            "openhermes": {
+                "repo": "TheBloke/OpenHermes-2.5-Mistral-7B-GGUF",
+                "file": "openhermes-2.5-mistral-7b.Q4_K_M.gguf",
+                "url": "https://huggingface.co/TheBloke/OpenHermes-2.5-Mistral-7B-GGUF/resolve/main/openhermes-2.5-mistral-7b.Q4_K_M.gguf",
+                "format": "chatml"
+            },
+            "starling": {
+                "repo": "TheBloke/Starling-LM-7B-alpha-GGUF",
+                "file": "starling-lm-7b-alpha.Q4_K_M.gguf",
+                "url": "https://huggingface.co/TheBloke/Starling-LM-7B-alpha-GGUF/resolve/main/starling-lm-7b-alpha.Q4_K_M.gguf",
+                "format": "chatml"
+            },
+            "dolphin": {
+                "repo": "TheBloke/dolphin-2.5-mixtral-8x7b-GGUF",
+                "file": "dolphin-2.5-mixtral-8x7b.Q4_K_M.gguf",
+                "url": "https://huggingface.co/TheBloke/dolphin-2.5-mixtral-8x7b-GGUF/resolve/main/dolphin-2.5-mixtral-8x7b.Q4_K_M.gguf",
+                "format": "chatml"
             }
         }
         self.models_dir = os.path.join(os.getcwd(), "models")
