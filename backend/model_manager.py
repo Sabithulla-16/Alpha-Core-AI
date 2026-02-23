@@ -28,16 +28,16 @@ class ModelManager:
                 "format": "chatml"
             },
             "deepseek-coder": {
-                "repo": "TheBloke/deepseek-coder-6.7b-instruct-gguf",
-                "file": "deepseek-coder-6.7b-instruct-q4_k_m.gguf",
-                "url": "https://huggingface.co/TheBloke/deepseek-coder-6.7b-instruct-gguf/resolve/main/deepseek-coder-6.7b-instruct-q4_k_m.gguf",
+                "repo": "TheBloke/dolphin-2.1-mistral-7B-GGUF",
+                "file": "dolphin-2.1-mistral-7b.Q4_K_M.gguf",
+                "url": "https://huggingface.co/TheBloke/dolphin-2.1-mistral-7B-GGUF/resolve/main/dolphin-2.1-mistral-7b.Q4_K_M.gguf",
                 "format": "chatml",
-                "size_gb": 2.3
+                "size_gb": 2.0
             },
             "phi-3.5": {
-                "repo": "microsoft/phi-3.5-mini-instruct-gguf",
-                "file": "phi-3.5-mini-instruct-q4.gguf",
-                "url": "https://huggingface.co/microsoft/phi-3.5-mini-instruct-gguf/resolve/main/phi-3.5-mini-instruct-q4.gguf",
+                "repo": "TheBloke/dolphin-2.0-mistral-7B-GGUF",
+                "file": "dolphin-2.0-mistral-7b.Q4_K_M.gguf",
+                "url": "https://huggingface.co/TheBloke/dolphin-2.0-mistral-7B-GGUF/resolve/main/dolphin-2.0-mistral-7b.Q4_K_M.gguf",
                 "format": "chatml"
             },
             "mistral": {
@@ -59,17 +59,17 @@ class ModelManager:
                 "format": "chatml"
             },
             "zephyr": {
-                "repo": "TheBloke/zephyr-7B-GGUF",
-                "file": "zephyr-7b.Q4_K_M.gguf",
-                "url": "https://huggingface.co/TheBloke/zephyr-7B-GGUF/resolve/main/zephyr-7b.Q4_K_M.gguf",
+                "repo": "TheBloke/neural-chat-7B-v3-3-GGUF",
+                "file": "neural-chat-7b-v3-3.Q4_K_M.gguf",
+                "url": "https://huggingface.co/TheBloke/neural-chat-7B-v3-3-GGUF/resolve/main/neural-chat-7b-v3-3.Q4_K_M.gguf",
                 "format": "chatml"
             },
             "opencoder": {
-                "repo": "TheBloke/opencoder-8b-instruct-gguf",
-                "file": "opencoder-8b-instruct-q4_k_m.gguf",
-                "url": "https://huggingface.co/TheBloke/opencoder-8b-instruct-gguf/resolve/main/opencoder-8b-instruct-q4_k_m.gguf",
+                "repo": "TheBloke/Llama-2-13B-chat-GGUF",
+                "file": "llama-2-13b-chat.Q4_K_M.gguf",
+                "url": "https://huggingface.co/TheBloke/Llama-2-13B-chat-GGUF/resolve/main/llama-2-13b-chat.Q4_K_M.gguf",
                 "format": "chatml",
-                "size_gb": 2.3
+                "size_gb": 3.5
             }
         }
         self.models_dir = os.path.join(os.getcwd(), "models")

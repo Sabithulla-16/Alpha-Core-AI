@@ -142,16 +142,39 @@ async def chat_endpoint(request: ChatRequest):
                     
                     # Add tool results to context
                     if tool_results:
-                        tool_context = "Based on real-time data:\n\n"
+                        tool_context = "\n🔧 REAL-TIME DATA RETRIEVED:\n"
                         for tool, result in tool_results.items():
-                            tool_context += f"[{tool.upper().replace('_', ' ')}]: {json.dumps(result, indent=2)}\n\n"
+                            if result.get("status") == "success":
+                                # Format result for model
+                                if tool == "weather" and "temperature" in result:
+                                    tool_context += f"\n📍 {result.get('location', '')}: {result.get('temperature')}°{result.get('units', 'C').upper()[0]}, {result.get('weather', '')} (Humidity: {result.get('humidity', 'N/A')}%)"
+                                elif tool == "crypto_price" and "price" in result:
+                                    tool_context += f"\n💰 {result.get('cryptocurrency', '')}: ${result.get('price', 'N/A')} (Change 24h: {result.get('change_24h', 'N/A')}%)"
+                                elif tool == "currency_convert" and "converted_amount" in result:
+                                    tool_context += f"\n💱 {result.get('amount')} {result.get('from_currency')} = {result.get('converted_amount')} {result.get('to_currency')}"
+                                elif tool == "web_search" and "results" in result:
+                                    tool_context += f"\n🔍 Search Results for '{result.get('query', '')}':\n"
+                                    for i, r in enumerate(result.get("results", [])[:3], 1):
+                                        tool_context += f"   {i}. {r.get('title', '')}: {r.get('snippet', '')[:100]}...\n"
+                                elif tool == "time":
+                                    tool_context += f"\n⏰ {result.get('timezone', '')}: {result.get('time')} ({result.get('date')})"
+                                elif tool == "calculator" and "result" in result:
+                                    tool_context += f"\n🧮 {result.get('expression')} = {result.get('result')}"
+                                else:
+                                    tool_context += f"\n📊 {tool.replace('_', ' ').upper()}: {json.dumps(result, indent=2)[:200]}..."
                         
-                        enhanced_message = f"{request.message}\n\n{tool_context}"
+                        # Enhanced message with tool data
+                        enhanced_message = f"{request.message}{tool_context}\n\nPlease provide an answer based on this real-time information."
                         request.context = request.context or []
                         request.context.append({
                             "role": "system",
-                            "content": tool_context
+                            "content": f"You have access to real-time data. Use this information to provide accurate, current answers.{tool_context}"
                         })
+                        
+                        # Use enhanced message instead of original
+                        actual_message = enhanced_message
+                    else:
+                        actual_message = request.message
                     
                     # Yield tool information to client
                     if tools_used:
@@ -165,7 +188,7 @@ async def chat_endpoint(request: ChatRequest):
                     "repeat_penalty": request.repeat_penalty
                 }
                 
-                for token in model_manager.generate_stream(request.model, request.message, request.context, **params):
+                for token in model_manager.generate_stream(request.model, actual_message, request.context, **params):
                     full_response += token
                     yield f"data: {json.dumps({'token': token})}\n\n"
                 
