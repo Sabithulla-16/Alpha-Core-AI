@@ -2,6 +2,8 @@ import os
 from llama_cpp import Llama
 import requests
 from typing import Generator
+import hashlib
+import json
 
 class ModelManager:
     def __init__(self):
@@ -24,6 +26,13 @@ class ModelManager:
                 "file": "qwen2.5-coder-1.5b-instruct-q4_k_m.gguf",
                 "url": "https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF/resolve/main/qwen2.5-coder-1.5b-instruct-q4_k_m.gguf",
                 "format": "chatml"
+            },
+            "deepseek-coder": {
+                "repo": "TheBloke/deepseek-coder-6.7b-instruct-gguf",
+                "file": "deepseek-coder-6.7b-instruct-q4_k_m.gguf",
+                "url": "https://huggingface.co/TheBloke/deepseek-coder-6.7b-instruct-gguf/resolve/main/deepseek-coder-6.7b-instruct-q4_k_m.gguf",
+                "format": "chatml",
+                "size_gb": 2.3
             },
             "phi-3.5": {
                 "repo": "microsoft/phi-3.5-mini-instruct-gguf",
@@ -54,6 +63,13 @@ class ModelManager:
                 "file": "zephyr-7b.Q4_K_M.gguf",
                 "url": "https://huggingface.co/TheBloke/zephyr-7B-GGUF/resolve/main/zephyr-7b.Q4_K_M.gguf",
                 "format": "chatml"
+            },
+            "opencoder": {
+                "repo": "TheBloke/opencoder-8b-instruct-gguf",
+                "file": "opencoder-8b-instruct-q4_k_m.gguf",
+                "url": "https://huggingface.co/TheBloke/opencoder-8b-instruct-gguf/resolve/main/opencoder-8b-instruct-q4_k_m.gguf",
+                "format": "chatml",
+                "size_gb": 2.3
             }
         }
         self.models_dir = os.path.join(os.getcwd(), "models")
@@ -77,18 +93,35 @@ class ModelManager:
             raise ValueError(f"Model {model_id} not configured")
         
         target_path = os.path.join(self.models_dir, config["file"])
-        if os.path.exists(target_path) and os.path.getsize(target_path) > 50000000:
-            return target_path
+        
+        # Check if model already exists and is valid
+        if os.path.exists(target_path):
+            file_size = os.path.getsize(target_path)
+            # Check if file size is reasonable (at least 100MB for GGUF models)
+            if file_size > 100000000:
+                print(f"✓ {model_id} found in cache ({file_size / 1024 / 1024:.1f} MB)")
+                return target_path
+            else:
+                print(f"⚠ Incomplete file detected, re-downloading...")
+                os.remove(target_path)
 
         print(f"Downloading {model_id}...")
         try:
-            response = requests.get(config["url"], stream=True, timeout=60)
+            response = requests.get(config["url"], stream=True, timeout=120)
             response.raise_for_status()
+            total_size = int(response.headers.get('content-length', 0))
+            downloaded = 0
+            
             with open(target_path, "wb") as f:
-                for chunk in response.iter_content(chunk_size=1024*1024):
+                for chunk in response.iter_content(chunk_size=8192*128):  # 1MB chunks
                     if chunk:
                         f.write(chunk)
-            print(f"✓ {model_id} downloaded")
+                        downloaded += len(chunk)
+                        if total_size:
+                            progress = (downloaded / total_size) * 100
+                            print(f"  {progress:.1f}% ({downloaded / 1024 / 1024:.1f} MB / {total_size / 1024 / 1024:.1f} MB)")
+            
+            print(f"✓ {model_id} downloaded successfully")
             return target_path
         except Exception as e:
             if os.path.exists(target_path):
@@ -157,3 +190,5 @@ class ModelManager:
             if hasattr(model, 'close'):
                 model.close()
         self.models.clear()
+# Create global instance
+model_manager = ModelManager()

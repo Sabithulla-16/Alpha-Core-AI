@@ -32,17 +32,33 @@ const MODELS = [
     id: 'coder', 
     name: 'Qwen Coder 1.5B',
     category: 'Programming',
-    description: 'Code generation and debugging',
+    description: 'Lightweight code generation',
     icon: <Code size={18} />,
-    prompts: ["Debug this code", "Write a function", "Optimize code"]
+    prompts: ["Debug code", "Write function", "Quick fix"]
   },
   {
     id: 'phi-3.5', 
     name: 'Phi 3.5 Mini',
     category: 'Programming',
-    description: 'Microsoft lightweight but intelligent model',
+    description: 'Microsoft lightweight intelligent coder',
     icon: <Code size={18} />,
-    prompts: ["Write Python code", "Explain algorithm", "Code review"]
+    prompts: ["Write Python", "Code review", "Explain logic"]
+  },
+  {
+    id: 'deepseek-coder', 
+    name: 'DeepSeek Coder 6.7B',
+    category: 'Programming',
+    description: 'Specialized for code generation and understanding',
+    icon: <Code size={18} />,
+    prompts: ["Generate code", "Debug efficiently", "Code analysis"]
+  },
+  {
+    id: 'opencoder', 
+    name: 'OpenCoder 8B',
+    category: 'Programming',
+    description: 'Advanced code generation and problem solving',
+    icon: <Code size={18} />,
+    prompts: ["Build application", "Complex algorithms", "System design"]
   },
   {
     id: 'mistral', 
@@ -58,7 +74,7 @@ const MODELS = [
     category: 'Intelligence',
     description: 'Optimized for coherent conversation',
     icon: <Brain size={18} />,
-    prompts: ["Have a conversation", "Explain concept", "Technical discussion"]
+    prompts: ["Have conversation", "Explain topic", "Technical Q&A"]
   },
   {
     id: 'llama-2', 
